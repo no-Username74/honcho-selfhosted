@@ -6,12 +6,22 @@ No public ports, no domains — reachable only inside `dokploy-network` at
 
 ## Stack
 
-| Service  | Image                              | Reachable from           |
-|----------|------------------------------------|--------------------------|
-| api      | ghcr.io/plastic-labs/honcho:v2.0.3 | dokploy-network:8000     |
-| deriver  | ghcr.io/plastic-labs/honcho:v2.0.3 | internal only            |
-| database | pgvector/pgvector:pg15             | internal only            |
-| redis    | redis:8.2                          | internal only            |
+| Service  | Image                                        | Reachable from           |
+|----------|----------------------------------------------|--------------------------|
+| api      | ghcr.io/plastic-labs/honcho@sha256:790e186a… | dokploy-network:8000     |
+| deriver  | ghcr.io/plastic-labs/honcho@sha256:790e186a… | internal only            |
+| database | pgvector/pgvector:pg15                       | internal only            |
+| redis    | redis:8.2                                    | internal only            |
+
+**Image pin:** `latest` pinned by multi-arch index digest. ghcr's semver tags
+stop at `v2.0.3` (old v2 schema — no `docker/entrypoint.sh`, no
+`MODEL_CONFIG__*` vars). To update the pin:
+
+```bash
+TOKEN=$(curl -s "https://ghcr.io/token?scope=repository:plastic-labs/honcho:pull" | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
+curl -sI -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.oci.image.index.v1+json" \
+  https://ghcr.io/v2/plastic-labs/honcho/manifests/latest | grep -i docker-content-digest
+```
 
 ## Hardening vs upstream `docker-compose.yml.example`
 

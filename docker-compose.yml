@@ -12,9 +12,16 @@
 # Secrets are injected by Dokploy's env field via ${} interpolation:
 #   POSTGRES_PASSWORD, AUTH_JWT_SECRET, OPENROUTER_API_KEY
 
+# NOTE: ghcr has no usable semver tags for the v3 API (v2.0.3 is the old v2
+# schema, lacks docker/entrypoint.sh and MODEL_CONFIG__* env vars). We pin
+# `latest` BY DIGEST (multi-arch index) — immutable, matches main's v3 config.
+# To update: fetch the new index digest for tag `latest` via the ghcr token
+# flow (see README), bump both image lines, commit, redeploy.
+_HONCHO_IMAGE: &honcho-image ghcr.io/plastic-labs/honcho@sha256:790e186a0e97cd03cc505b4d737f9fde2afc8d04a1bcfbd8994e2962e8815f1f
+
 services:
   api:
-    image: ghcr.io/plastic-labs/honcho:v2.0.3
+    image: *honcho-image
     entrypoint: ["sh", "docker/entrypoint.sh"]
     depends_on:
       database:
@@ -85,7 +92,7 @@ services:
     restart: unless-stopped
 
   deriver:
-    image: ghcr.io/plastic-labs/honcho:v2.0.3
+    image: *honcho-image
     entrypoint: ["/app/.venv/bin/python", "-m", "src.deriver"]
     depends_on:
       api:
