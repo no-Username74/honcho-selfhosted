@@ -87,8 +87,13 @@ services:
       - DIALECTIC_LEVELS__max__MODEL_CONFIG__MODEL=google/gemini-2.5-flash
       - DIALECTIC_LEVELS__max__MODEL_CONFIG__OVERRIDES__BASE_URL=https://openrouter.ai/api/v1
     networks:
-      - internal
-      - dokploy-network
+      internal:
+      dokploy-network:
+        aliases:
+          - honcho-api
+      hermes-net:
+        aliases:
+          - honcho-api
     restart: unless-stopped
 
   deriver:
@@ -188,3 +193,11 @@ networks:
     driver: bridge
   dokploy-network:
     external: true
+  # Per-app bridge network of the "Hermes - Kiarash" Dokploy stack. This
+  # Dokploy version isolates every compose app on its own network (traefik
+  # joins each for routing), so the swarm-overlay dokploy-network alone is
+  # NOT enough for the Hermes container to reach us. Add future agents'
+  # app networks here the same way.
+  hermes-net:
+    external: true
+    name: hermes-hermes-rvc5ww
