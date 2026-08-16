@@ -17,7 +17,7 @@
 # `latest` BY DIGEST (multi-arch index) — immutable, matches main's v3 config.
 # To update: fetch the new index digest for tag `latest` via the ghcr token
 # flow (see README), bump both image lines, commit, redeploy.
-x-honcho-image: &honcho-image ghcr.io/plastic-labs/honcho@sha256:790e186a0e97cd03cc505b4d737f9fde2afc8d04a1bcfbd8994e2962e8815f1f
+x-honcho-image: &honcho-image ghcr.io/plastic-labs/honcho@sha256:39053cb3ccec1f6073b42e1bb4a7895c97de0c051589df91426deafe89ef1d18
 
 services:
   api:
