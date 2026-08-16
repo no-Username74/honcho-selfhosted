@@ -150,6 +150,7 @@ services:
       - DIALECTIC_LEVELS__max__MODEL_CONFIG__OVERRIDES__BASE_URL=https://openrouter.ai/api/v1
     networks:
       - internal
+    mem_limit: 1g
     restart: unless-stopped
 
   database:
@@ -176,6 +177,7 @@ services:
   redis:
     image: redis:8.2
     mem_limit: 512m
+    command: ["redis-server", "--maxmemory", "448mb", "--maxmemory-policy", "allkeys-lru"]
     restart: unless-stopped
     volumes:
       - redis-data:/data
